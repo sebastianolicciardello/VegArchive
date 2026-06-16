@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import { getCollection } from 'astro:content';
+
+const recipes = (await getCollection('recipes'))
+  .sort((a, b) => b.data.date.localeCompare(a.data.date));
+const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
+---
+
+<BaseLayout title="VegArchive — Ricette Vegetali">
+  <section>
+    <div class="controls">
+      <input type="search" id="search" placeholder="Cerca ricetta..." autocomplete="off" />
+      <div class="tag-filters" id="tagFilters">
+        <button class="filter-btn active" data-tag="">Tutte</button>
+        {allTags.map(t => (
+          <button class="filter-btn" data-tag={t}>{t}</button>
+        ))}
+      </div>
+    </div>
+
+    {recipes.length === 0 && (
+      <p style="color: var(--text-light); font-style: italic;">
+        Nessuna ricetta ancora. Usa <code>npm run fetch-recipe</code> per aggiungerne una.
+      </p>
+    )}
+
+    <div class="grid" id="recipeGrid">
+      {recipes.map(r => <RecipeCard recipe={r} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.getElementById('search');
+  const grid = document.getElementById('recipeGrid');
+  const cards = Array.from(grid.querySelectorAll('article'));
+  const filterBtns = document.querySelectorAll('.filter-btn');
+
+  let activeTag = '';
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTag = btn.dataset.tag;
+      filter();
+    });
+  });
+
+  search.addEventListener('input', filter);
+
+  function filter() {
+    const q = search.value.toLowerCase().trim();
+    cards.forEach(card => {
+      const tags = (card.dataset.tags || '').split(',');
+      const title = (card.dataset.title || '').toLowerCase();
+      const author = (card.dataset.author || '').toLowerCase();
+      const body = (card.dataset.body || '').toLowerCase();
+
+      const matchesTag = !activeTag || tags.includes(activeTag);
+      const matchesSearch = !q || title.includes(q) || author.includes(q) || body.includes(q);
+
+      card.style.display = matchesTag && matchesSearch ? '' : 'none';
+    });
+  }
+</script>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #search {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    background: var(--bg-card);
+    outline: none;
+  }
+  #search:focus {
+    border-color: var(--green-light);
+  }
+
+  .tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .filter-btn {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--bg-card);
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .filter-btn:hover {
+    border-color: var(--green-light);
+    background: #f0f5f0;
+  }
+  .filter-btn.active {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+  }
+  .filter-btn[data-tag="dolce"] { border-color: var(--tag-dolce); color: var(--tag-dolce); }
+  .filter-btn[data-tag="dolce"]:hover,
+  .filter-btn[data-tag="dolce"].active { background: var(--tag-dolce); color: white; border-color: var(--tag-dolce); }
+  .filter-btn[data-tag="salato"] { border-color: var(--tag-salato); color: var(--tag-salato); }
+  .filter-btn[data-tag="salato"]:hover,
+  .filter-btn[data-tag="salato"].active { background: var(--tag-salato); color: white; border-color: var(--tag-salato); }
+  .filter-btn[data-tag="forno"] { border-color: var(--tag-forno); color: var(--tag-forno); }
+  .filter-btn[data-tag="forno"]:hover,
+  .filter-btn[data-tag="forno"].active { background: var(--tag-forno); color: white; border-color: var(--tag-forno); }
+  .filter-btn[data-tag="senza forno"] { border-color: var(--tag-senzaforno); color: var(--tag-senzaforno); }
+  .filter-btn[data-tag="senza forno"]:hover,
+  .filter-btn[data-tag="senza forno"].active { background: var(--tag-senzaforno); color: white; border-color: var(--tag-senzaforno); }
+
+  code {
+    background: #eee;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+</style>

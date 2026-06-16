@@ -1,0 +1,82 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  recipe: CollectionEntry<'recipes'>;
+}
+
+const { recipe } = Astro.props;
+const { title, author, tags, youtube, date } = recipe.data;
+const videoId = youtube.match(/(?:v=|\/)([\w-]{11})/)?.[1];
+const tagColors = {
+  salato: 'var(--tag-salato)',
+  dolce: 'var(--tag-dolce)',
+  forno: 'var(--tag-forno)',
+  'senza forno': 'var(--tag-senzaforno)',
+};
+---
+
+<article data-tags={tags?.join(',')} data-title={title} data-author={author} data-body={recipe.body}>
+  <a href={`/recipes/${recipe.slug}/`}>
+    {videoId && (
+      <img
+        src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+        alt={title}
+        loading="lazy"
+      />
+    )}
+    <div class="card-body">
+      <h3>{title}</h3>
+      <p class="author">{author}</p>
+      <p class="date">{date}</p>
+      <div class="tags">
+        {tags?.map(t => (
+          <span
+            class="tag"
+            style={`background: ${tagColors[t] || 'var(--green-light)'}`}
+          >{t}</span>
+        ))}
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  article {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.15s;
+  }
+  article:hover { transform: translateY(-3px); }
+  a { text-decoration: none; color: inherit; }
+  img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+  .card-body {
+    padding: 1rem 1.2rem 1.2rem;
+  }
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--green-dark);
+  }
+  .author, .date {
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+  .date {
+    margin-bottom: 0.5rem;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .tag {
+    display: inline-block;
+    color: white;
+    padding: 0.15rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+  }
+</style>

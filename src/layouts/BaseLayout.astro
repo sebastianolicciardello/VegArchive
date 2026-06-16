@@ -1,0 +1,105 @@
+---
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | VegArchive</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#4a7c59" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <style>
+      :root {
+        --green: #4a7c59;
+        --green-light: #6b9f7a;
+        --green-dark: #2d5a3b;
+        --bg: #faf8f5;
+        --bg-card: #ffffff;
+        --text: #1a1a1a;
+        --text-light: #666;
+        --border: #e8e3dc;
+        --radius: 12px;
+        --shadow: 0 2px 8px rgba(0,0,0,0.06);
+        --tag-salato: #d35400;
+        --tag-dolce: #c0397a;
+        --tag-forno: #e67e22;
+        --tag-senzaforno: #1abc9c;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+      }
+      header {
+        background: var(--bg);
+        padding: 1.2rem 2rem;
+      }
+      header .logo-link {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--text);
+      }
+      .logo-wrap {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-wrap img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      main {
+        max-width: 900px;
+        margin: 0.5rem auto;
+        padding: 0 1.5rem;
+      }
+      h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--green-dark); }
+      h2 { font-size: 1.4rem; margin: 2rem 0 0.75rem; color: var(--green-dark); }
+      :global(.tag) {
+        display: inline-block;
+        color: white;
+        padding: 0.2rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+      }
+      :global(.tag-salato) { background: var(--tag-salato); }
+      :global(.tag-dolce) { background: var(--tag-dolce); }
+      :global(.tag-forno) { background: var(--tag-forno); }
+      :global(.tag-senza-forno) { background: var(--tag-senzaforno); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="logo-link">
+        <div class="logo-wrap"><img src="/favicon.png" alt="" /></div>
+      </a>
+    </header>
+    <main>
+      <slot />
+    </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' });
+        });
+      }
+    </script>
+  </body>
+</html>

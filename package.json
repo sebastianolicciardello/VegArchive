@@ -1,0 +1,19 @@
+{
+  "name": "vegarchive",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "fetch-recipe": "node src/scripts/fetch-recipe.mjs"
+  },
+  "dependencies": {
+    "@vite-pwa/astro": "^1.2.0",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "youtube-transcript": "^1.2.1"
+  }
+}
