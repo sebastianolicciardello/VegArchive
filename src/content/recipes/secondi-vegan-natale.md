@@ -2,6 +2,7 @@
 title: "Secondi Vegan per Natale"
 author: "Cucina Botanica"
 youtube: "https://www.youtube.com/watch?v=isDtDI3k2GE"
+date: "2026-06-16"
 tags:
   - salato
   - forno
