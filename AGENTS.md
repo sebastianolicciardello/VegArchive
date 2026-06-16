@@ -11,6 +11,7 @@ Regole:
 - Elimina ripetizioni, saluti, sponsor e parti non rilevanti.
 - Mantieni il significato originale della ricetta.
 - Se il video contiene suggerimenti utili, inseriscili nella sezione "Note".
+- Se il video contiene più ricette, crea sezioni separate all'interno dello stesso file (`---` come separatore), ciascuna con ingredienti, procedimento, note, tempi e porzioni propri.
 - Genera il file in `src/content/recipes/` seguendo il formato delle ricette esistenti.
 
 ## Tag ammessi
@@ -26,6 +27,7 @@ Categoria cottura:
 - `senza forno`
 
 Quindi una ricetta ha sempre 2 tag: uno tra `dolce`/`salato` e uno tra `forno`/`senza forno`.
+Se una collezione di ricette include sia piatti al forno che senza, usare **entrambi** i tag `forno` e `senza forno`.
 Niente `vegetale` e niente `vegan`.
 
 ## Struttura file
