@@ -5,7 +5,7 @@ youtube: "https://www.youtube.com/watch?v=3kcE4iA2AmA"
 date: "2026-06-16"
 tags:
   - salato
-  - senza forno
+  - mixer
 transcript: >
   buongiorno a tutti e benvenuti in cucina botanica io sono carlotta e oggi
   prepariamo un buonissimo humus alla barbabietola che questo colore sgargiante
@@ -45,6 +45,10 @@ Hummus cremoso e dal colore vibrante, arricchito con barbabietola. Pronto in 2 m
 - 1 spicchio d'aglio
 - Succo di 2 limoni
 - Acqua q.b.
+
+## Strumenti
+
+- Mixer
 
 ## Procedimento
 

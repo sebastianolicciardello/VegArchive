@@ -5,7 +5,6 @@ youtube: "https://www.youtube.com/watch?v=yuH8Et5hO2g"
 date: "2026-06-16"
 tags:
   - salato
-  - senza forno
 transcript: >
   arancine arancini io nel video di oggi non voglio scatenare nessuna disputa
   per comodità mi limiterò ad usare il termine che ho usato per tutta la mia
@@ -101,6 +100,10 @@ Meravigliose palline di riso fritte con un ripieno di ragù vegetale al
 
 ### Per friggere
 - Olio per frittura q.b.
+
+## Strumenti
+
+- Retino o schiumarola
 
 ## Procedimento
 

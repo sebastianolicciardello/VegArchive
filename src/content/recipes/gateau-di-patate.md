@@ -66,9 +66,13 @@ Un piatto superconfortevole, vegano e senza glutine, composto da strati di
 - 2 cucchiai di lievito alimentare
 - 2 bicchieri di latte vegetale senza zucchero
 - 300-400 g di verdure già cotte (cime di rapa, spinaci, broccoli, zucca o
- mix)
+  mix)
 - Pangrattato q.b. (anche senza glutine)
 - Pepe nero q.b. (opzionale)
+
+## Strumenti
+
+- Mandolina
 
 ## Procedimento
 

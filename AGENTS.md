@@ -18,23 +18,32 @@ Regole:
 
 Usare **solo** questi tag, uno per categoria:
 
-Categoria gusto:
+Categoria gusto (sempre presente, uno solo):
 - `dolce`
 - `salato`
 
-Categoria cottura:
+Categoria strumento (opzionale, multi):
 - `forno`
-- `senza forno`
+- `microonde`
+- `mixer`
 
-Quindi una ricetta ha sempre 2 tag: uno tra `dolce`/`salato` e uno tra `forno`/`senza forno`.
-Se una collezione di ricette include sia piatti al forno che senza, usare **entrambi** i tag `forno` e `senza forno`.
-Niente `vegetale` e niente `vegan`.
+Quindi una ricetta ha sempre 1 tag (gusto), più eventuali tag strumento.
+Il tag `forno` si usa solo per ricette che vanno effettivamente in forno.
+Le ricette senza forno (padella, cottura Piano cottura, ecc.) non hanno tag di cottura.
+È possibile avere più tag strumento insieme (es. `forno` + `mixer`).
+Niente `vegetale`, `vegan` e `senza forno`.
 
 ## Struttura file
 
 I file ricetta vanno in `src/content/recipes/` come `.md` con frontmatter YAML.
 Il campo `transcript` nel frontmatter contiene la trascrizione pulita (non visibile in pagina).
 I campi `prepTime`, `cookTime`, `totalTime`, `servings` vanno sempre compilati se possibile.
+
+## Strumenti
+
+Se la ricetta richiede strumenti specifici oltre all'attrezzatura base (coltello, tagliere, pentole, padelle, ciotole), aggiungi una sezione `## Strumenti` subito dopo `## Ingredienti`, elencando ogni strumento con un trattino.
+Usa il nome esatto dello strumento menzionato nel video (es. `mixer`, `mandolina`, `setaccio`).
+Per le raccolte di più ricette (`---`), aggiungi `### Strumenti` sotto ogni sottoricetta.
 
 ## Trascrizione
 

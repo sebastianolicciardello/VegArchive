@@ -6,6 +6,7 @@ date: "2026-06-16"
 tags:
   - salato
   - forno
+  - mixer
 transcript: >
   i secondi piatti vegetali sono spesso una sfida perché come secondi tante
   persone si immaginano piatti a base di carne o di pesce e per natale è
@@ -129,6 +130,8 @@ Tre secondi piatti vegetali facili e adatti a tutti, perfetti per il
 Polpettone a base di lenticchie e verdure avvolto in pasta sfoglia,
  servito su un letto di purè di patate cremoso.
 
+**Cottura:** <span class="tag tag-forno">forno</span>
+
 ### Ingredienti
 
 #### Per il polpettone
@@ -143,6 +146,10 @@ Polpettone a base di lenticchie e verdure avvolto in pasta sfoglia,
 - 2 cucchiai di pangrattato
 - 1 rotolo di pasta sfoglia (già pronta, solitamente vegana)
 - Latte vegetale q.b. per spennellare
+
+### Strumenti
+
+- Mixer
 
 #### Per il purè di patate
 - 1 kg di patate
@@ -193,6 +200,8 @@ Circa 6-8 persone
 Polpette vegetali a base di granulare di soia, cotte al forno e servite
  con un sugo semplice. Sembrano davvero quelle di carne.
 
+**Cottura:** <span class="tag tag-forno">forno</span>
+
 ### Ingredienti
 
 #### Per le polpette
@@ -203,6 +212,10 @@ Polpette vegetali a base di granulare di soia, cotte al forno e servite
 - 4-5 pomodori secchi
 - 2 cucchiai di pangrattato (più altro se necessario)
 - Olio extravergine d'oliva q.b.
+
+### Strumenti
+
+- Mixer
 
 #### Per il brodo saporito
 - 500 ml di brodo vegetale
@@ -264,6 +277,8 @@ Circa 15-20 polpette
 Fette di cavolfiore con crosta aromatica al forno, servite con un hummus
  cremoso ai fagioli bianchi e spinaci.
 
+**Cottura:** <span class="tag tag-forno">forno</span>
+
 ### Ingredienti
 
 #### Per il cavolfiore
@@ -273,6 +288,10 @@ Fette di cavolfiore con crosta aromatica al forno, servite con un hummus
 - Qualche aghiello di rosmarino
 - ½ cucchiaino di sale
 - Latte vegetale senza zucchero q.b.
+
+### Strumenti
+
+- Mixer
 
 #### Per l'hummus
 - 350 g di fagioli bianchi di Spagna (o ceci, o cannellini), già cotti

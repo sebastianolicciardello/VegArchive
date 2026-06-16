@@ -5,18 +5,30 @@ import { getCollection } from 'astro:content';
 
 const recipes = (await getCollection('recipes'))
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
-const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
 ---
 
 <BaseLayout title="VegArchive — Ricette Vegetali">
   <section>
     <div class="controls">
       <input type="search" id="search" placeholder="Cerca ricetta..." autocomplete="off" />
-      <div class="tag-filters" id="tagFilters">
-        <button class="filter-btn active" data-tag="">Tutte</button>
-        {allTags.map(t => (
-          <button class="filter-btn" data-tag={t}>{t}</button>
-        ))}
+      <div class="filter-groups">
+        <div class="filter-group">
+          <span class="filter-label">Tipo di cucina</span>
+          <div class="filter-options" id="gustoFilters">
+            <button class="filter-btn active" data-gusto="">Tutte</button>
+            <button class="filter-btn" data-gusto="dolce">dolce</button>
+            <button class="filter-btn" data-gusto="salato">salato</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Strumento</span>
+          <div class="filter-options" id="strumentoFilters">
+            <button class="filter-btn active" data-strumento="tutte">Tutte</button>
+            <button class="filter-btn" data-strumento="forno">forno</button>
+            <button class="filter-btn" data-strumento="microonde">microonde</button>
+            <button class="filter-btn" data-strumento="mixer">mixer</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -36,15 +48,37 @@ const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
   const search = document.getElementById('search');
   const grid = document.getElementById('recipeGrid');
   const cards = Array.from(grid.querySelectorAll('article'));
-  const filterBtns = document.querySelectorAll('.filter-btn');
+  const gustoBtns = document.querySelectorAll('#gustoFilters .filter-btn');
+  const strumentoBtns = document.querySelectorAll('#strumentoFilters .filter-btn');
 
-  let activeTag = '';
+  let activeGusto = '';
 
-  filterBtns.forEach(btn => {
+  gustoBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      gustoBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      activeTag = btn.dataset.tag;
+      activeGusto = btn.dataset.gusto;
+      filter();
+    });
+  });
+
+  const tutteBtn = document.querySelector('#strumentoFilters [data-strumento="tutte"]');
+  const specificBtns = document.querySelectorAll('#strumentoFilters [data-strumento]:not([data-strumento="tutte"])');
+
+  tutteBtn.addEventListener('click', () => {
+    specificBtns.forEach(b => b.classList.remove('active'));
+    tutteBtn.classList.add('active');
+    filter();
+  });
+
+  specificBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('active')) {
+        btn.classList.remove('active');
+      } else {
+        btn.classList.add('active');
+      }
+      tutteBtn.classList.remove('active');
       filter();
     });
   });
@@ -53,16 +87,24 @@ const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
 
   function filter() {
     const q = search.value.toLowerCase().trim();
+    const tutteActive = tutteBtn.classList.contains('active');
+    const activeStrumenti = Array.from(specificBtns)
+      .filter(b => b.classList.contains('active'))
+      .map(b => b.dataset.strumento);
+
     cards.forEach(card => {
       const tags = (card.dataset.tags || '').split(',');
       const title = (card.dataset.title || '').toLowerCase();
       const author = (card.dataset.author || '').toLowerCase();
       const body = (card.dataset.body || '').toLowerCase();
 
-      const matchesTag = !activeTag || tags.includes(activeTag);
+      const matchesGusto = !activeGusto || tags.includes(activeGusto);
+      const matchesStrumenti = tutteActive ||
+        activeStrumenti.length === 0 ||
+        activeStrumenti.every(s => tags.includes(s));
       const matchesSearch = !q || title.includes(q) || author.includes(q) || body.includes(q);
 
-      card.style.display = matchesTag && matchesSearch ? '' : 'none';
+      card.style.display = matchesGusto && matchesStrumenti && matchesSearch ? '' : 'none';
     });
   }
 </script>
@@ -78,7 +120,7 @@ const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin: 3rem 0 1.5rem;
   }
 
   #search {
@@ -93,7 +135,30 @@ const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
     border-color: var(--green-light);
   }
 
-  .tag-filters {
+  .filter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .filter-group {
+    background: #f6f4f1;
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .filter-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .filter-options {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
@@ -118,18 +183,22 @@ const allTags = [...new Set(recipes.flatMap(r => r.data.tags ?? []))].sort();
     color: white;
     border-color: var(--green);
   }
-  .filter-btn[data-tag="dolce"] { border-color: var(--tag-dolce); color: var(--tag-dolce); }
-  .filter-btn[data-tag="dolce"]:hover,
-  .filter-btn[data-tag="dolce"].active { background: var(--tag-dolce); color: white; border-color: var(--tag-dolce); }
-  .filter-btn[data-tag="salato"] { border-color: var(--tag-salato); color: var(--tag-salato); }
-  .filter-btn[data-tag="salato"]:hover,
-  .filter-btn[data-tag="salato"].active { background: var(--tag-salato); color: white; border-color: var(--tag-salato); }
-  .filter-btn[data-tag="forno"] { border-color: var(--tag-forno); color: var(--tag-forno); }
-  .filter-btn[data-tag="forno"]:hover,
-  .filter-btn[data-tag="forno"].active { background: var(--tag-forno); color: white; border-color: var(--tag-forno); }
-  .filter-btn[data-tag="senza forno"] { border-color: var(--tag-senzaforno); color: var(--tag-senzaforno); }
-  .filter-btn[data-tag="senza forno"]:hover,
-  .filter-btn[data-tag="senza forno"].active { background: var(--tag-senzaforno); color: white; border-color: var(--tag-senzaforno); }
+
+  .filter-btn[data-gusto="dolce"] { border-color: var(--tag-dolce); color: var(--tag-dolce); }
+  .filter-btn[data-gusto="dolce"]:hover { background: #fceef5; border-color: var(--tag-dolce); color: var(--tag-dolce); }
+  .filter-btn[data-gusto="dolce"].active { background: var(--tag-dolce); color: white; border-color: var(--tag-dolce); }
+  .filter-btn[data-gusto="salato"] { border-color: var(--tag-salato); color: var(--tag-salato); }
+  .filter-btn[data-gusto="salato"]:hover { background: #fdf0e6; border-color: var(--tag-salato); color: var(--tag-salato); }
+  .filter-btn[data-gusto="salato"].active { background: var(--tag-salato); color: white; border-color: var(--tag-salato); }
+  .filter-btn[data-strumento="forno"] { border-color: var(--tag-forno); color: var(--tag-forno); }
+  .filter-btn[data-strumento="forno"]:hover { background: #fdf4e6; border-color: var(--tag-forno); color: var(--tag-forno); }
+  .filter-btn[data-strumento="forno"].active { background: var(--tag-forno); color: white; border-color: var(--tag-forno); }
+  .filter-btn[data-strumento="microonde"] { border-color: var(--tag-microonde); color: var(--tag-microonde); }
+  .filter-btn[data-strumento="microonde"]:hover { background: #f6eefa; border-color: var(--tag-microonde); color: var(--tag-microonde); }
+  .filter-btn[data-strumento="microonde"].active { background: var(--tag-microonde); color: white; border-color: var(--tag-microonde); }
+  .filter-btn[data-strumento="mixer"] { border-color: var(--tag-mixer); color: var(--tag-mixer); }
+  .filter-btn[data-strumento="mixer"]:hover { background: #eaf4fb; border-color: var(--tag-mixer); color: var(--tag-mixer); }
+  .filter-btn[data-strumento="mixer"].active { background: var(--tag-mixer); color: white; border-color: var(--tag-mixer); }
 
   code {
     background: #eee;
