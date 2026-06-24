@@ -14,11 +14,21 @@ export async function getStaticPaths() {
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
 
-const { title, author, youtube, tags, date, prepTime, cookTime, totalTime, servings } = recipe.data;
+const { title, author, youtube, tags, date, prepTime, cookTime, totalTime, servings, subrecipes } = recipe.data;
 const videoId = youtube.match(/(?:v=|\/)([\w-]{11})/)?.[1];
+const isCollection = subrecipes && subrecipes.length > 0;
 const authorUrl = youtube.startsWith('https://www.youtube.com')
   ? `https://www.youtube.com/@${author.replace(/\s+/g, '')}`
   : `https://www.youtube.com/results?search_query=${encodeURIComponent(author)}`;
+
+function anchorSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 ---
 
 <BaseLayout title={title}>
@@ -30,9 +40,24 @@ const authorUrl = youtube.startsWith('https://www.youtube.com')
       Di <a href={authorUrl} target="_blank" rel="noopener">{author}</a>
     </p>
 
-    <div class="tags">
-      {tags?.map(t => <span class={`tag tag-${t.replace(/\s+/g, '-')}`}>{t}</span>)}
-    </div>
+    {isCollection ? (
+      <div class="subrecipes-summary">
+        {subrecipes.map(sr => (
+          <a href={`#${anchorSlug(sr.title)}`} class="subrecipe-link">
+            <span class="subrecipe-name">{sr.title}</span>
+            <span class="subrecipe-tags">
+              {sr.tags.map(t => (
+                <span class={`tag tag-${t.replace(/\s+/g, '-')}`}>{t}</span>
+              ))}
+            </span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="tags">
+        {tags?.map(t => <span class={`tag tag-${t.replace(/\s+/g, '-')}`}>{t}</span>)}
+      </div>
+    )}
 
     {(date || prepTime || cookTime || totalTime || servings) && (
       <table class="info-table">
@@ -89,6 +114,41 @@ const authorUrl = youtube.startsWith('https://www.youtube.com')
   }
   .meta a { color: var(--green); }
   .tags { margin-bottom: 0.4rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+  .subrecipes-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.6rem;
+  }
+  .subrecipe-link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.3rem 0.6rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
+    font-size: 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .subrecipe-link:hover {
+    background: #f0f5f0;
+    border-color: var(--green-light);
+  }
+  .subrecipe-name {
+    font-weight: 600;
+    color: var(--green-dark);
+  }
+  .subrecipe-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
 
   .info-table {
     width: 100%;

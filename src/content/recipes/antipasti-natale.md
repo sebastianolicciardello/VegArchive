@@ -3,10 +3,13 @@ title: "Antipasti per Natale"
 author: "Cucina Botanica"
 youtube: "https://www.youtube.com/watch?v=LHqTxP4YI3g"
 date: "2026-06-16"
-tags:
-  - salato
-  - forno
-  - mixer
+subrecipes:
+  - title: "Ricetta 1: Patate al Forno con Hummus alla Barbabietola"
+    tags: [salato, forno, mixer]
+  - title: "Ricetta 2: Spiedini di Tempeh con Verdure al Forno"
+    tags: [salato, forno]
+  - title: "Ricetta 3: Insalata di Cous Cous con Pesto di Rucola"
+    tags: [salato, mixer]
 transcript: >
   avete ospiti vegetariani o vegani e non sapete cosa preparare oppure siete voi
   stessi vegetariani o vegani e volete fare un figurone benvenuti in cucina

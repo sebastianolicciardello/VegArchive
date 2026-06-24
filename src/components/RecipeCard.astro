@@ -6,9 +6,10 @@ export interface Props {
 }
 
 const { recipe } = Astro.props;
-const { title, author, tags, youtube, date } = recipe.data;
+const { title, author, tags, youtube, date, subrecipes } = recipe.data;
 const base = import.meta.env.BASE_URL;
 const videoId = youtube.match(/(?:v=|\/)([\w-]{11})/)?.[1];
+const isCollection = subrecipes && subrecipes.length > 0;
 const tagColors = {
   salato: 'var(--tag-salato)',
   dolce: 'var(--tag-dolce)',
@@ -16,9 +17,24 @@ const tagColors = {
   microonde: 'var(--tag-microonde)',
   mixer: 'var(--tag-mixer)',
 };
+
+function anchorSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 ---
 
-<article data-tags={tags?.join(',')} data-title={title} data-author={author} data-body={recipe.body}>
+<article
+  data-tags={tags?.join(',')}
+  data-title={title}
+  data-author={author}
+  data-body={recipe.body}
+  data-subrecipes={isCollection ? JSON.stringify(subrecipes) : undefined}
+>
   <a href={`${base}/recipes/${recipe.slug}/`}>
     {videoId && (
       <img
@@ -31,16 +47,33 @@ const tagColors = {
       <h3>{title}</h3>
       <p class="author">{author}</p>
       <p class="date">{date}</p>
-      <div class="tags">
-        {tags?.map(t => (
-          <span
-            class="tag"
-            style={`background: ${tagColors[t] || 'var(--green-light)'}`}
-          >{t}</span>
-        ))}
-      </div>
+      {!isCollection && (
+        <div class="tags">
+          {tags?.map(t => (
+            <span
+              class="tag"
+              style={`background: ${tagColors[t] || 'var(--green-light)'}`}
+            >{t}</span>
+          ))}
+        </div>
+      )}
     </div>
   </a>
+
+  {isCollection && (
+    <div class="subrecipes">
+      {subrecipes.map(sr => (
+        <a href={`${base}/recipes/${recipe.slug}/#${anchorSlug(sr.title)}`} class="subrecipe">
+          <span class="subrecipe-title">{sr.title}</span>
+          <div class="subrecipe-tags">
+            {sr.tags.map(t => (
+              <span class="tag" style={`background: ${tagColors[t] || 'var(--green-light)'}`}>{t}</span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+  )}
 </article>
 
 <style>
@@ -80,5 +113,37 @@ const tagColors = {
     padding: 0.15rem 0.6rem;
     border-radius: 20px;
     font-size: 0.75rem;
+  }
+  .subrecipes {
+    border-top: 1px solid var(--border);
+    padding: 0.6rem 1.2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .subrecipe {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.3rem 0.6rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 8px;
+    transition: background 0.12s;
+    font-size: 0.8rem;
+  }
+  .subrecipe:hover {
+    background: var(--bg);
+  }
+  .subrecipe-title {
+    color: var(--green-dark);
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+  .subrecipe-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
   }
 </style>

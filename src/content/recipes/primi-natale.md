@@ -2,10 +2,13 @@
 title: "Primi Piatti Perfetti per Natale"
 author: "Cucina Botanica"
 date: "2026-06-16"
-tags:
-  - salato
-  - forno
-  - mixer
+subrecipes:
+  - title: "Ricetta 1: Lasagna alla Zucca e Bio Mit"
+    tags: [salato, forno]
+  - title: "Ricetta 2: Risotto ai Porcini e Tartufo"
+    tags: [salato]
+  - title: "Ricetta 3: Ravioli con Ricotta Vegetale e Noci"
+    tags: [salato, mixer]
 
 youtube: "https://www.youtube.com/watch?v=QuIhVv3AsYM"
 transcript: >

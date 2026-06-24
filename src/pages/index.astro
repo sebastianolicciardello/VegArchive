@@ -24,6 +24,7 @@ const recipes = (await getCollection('recipes'))
           <span class="filter-label">Strumento</span>
           <div class="filter-options" id="strumentoFilters">
             <button class="filter-btn active" data-strumento="tutte">Tutte</button>
+            <button class="filter-btn" data-strumento="nessuno">nessuno</button>
             <button class="filter-btn" data-strumento="forno">forno</button>
             <button class="filter-btn" data-strumento="microonde">microonde</button>
             <button class="filter-btn" data-strumento="mixer">mixer</button>
@@ -63,11 +64,20 @@ const recipes = (await getCollection('recipes'))
   });
 
   const tutteBtn = document.querySelector('#strumentoFilters [data-strumento="tutte"]');
-  const specificBtns = document.querySelectorAll('#strumentoFilters [data-strumento]:not([data-strumento="tutte"])');
+  const nessunoBtn = document.querySelector('#strumentoFilters [data-strumento="nessuno"]');
+  const specificBtns = document.querySelectorAll('#strumentoFilters [data-strumento]:not([data-strumento="tutte"]):not([data-strumento="nessuno"])');
 
   tutteBtn.addEventListener('click', () => {
     specificBtns.forEach(b => b.classList.remove('active'));
+    nessunoBtn.classList.remove('active');
     tutteBtn.classList.add('active');
+    filter();
+  });
+
+  nessunoBtn.addEventListener('click', () => {
+    tutteBtn.classList.remove('active');
+    specificBtns.forEach(b => b.classList.remove('active'));
+    nessunoBtn.classList.add('active');
     filter();
   });
 
@@ -79,6 +89,7 @@ const recipes = (await getCollection('recipes'))
         btn.classList.add('active');
       }
       tutteBtn.classList.remove('active');
+      nessunoBtn.classList.remove('active');
       filter();
     });
   });
@@ -88,21 +99,57 @@ const recipes = (await getCollection('recipes'))
   function filter() {
     const q = search.value.toLowerCase().trim();
     const tutteActive = tutteBtn.classList.contains('active');
+    const nessunoActive = nessunoBtn.classList.contains('active');
     const activeStrumenti = Array.from(specificBtns)
       .filter(b => b.classList.contains('active'))
       .map(b => b.dataset.strumento);
+    const strumentoTags = ['forno', 'microonde', 'mixer'];
 
     cards.forEach(card => {
-      const tags = (card.dataset.tags || '').split(',');
       const title = (card.dataset.title || '').toLowerCase();
       const author = (card.dataset.author || '').toLowerCase();
       const body = (card.dataset.body || '').toLowerCase();
-
-      const matchesGusto = !activeGusto || tags.includes(activeGusto);
-      const matchesStrumenti = tutteActive ||
-        activeStrumenti.length === 0 ||
-        activeStrumenti.every(s => tags.includes(s));
       const matchesSearch = !q || title.includes(q) || author.includes(q) || body.includes(q);
+
+      const subrecipes = card.dataset.subrecipes ? JSON.parse(card.dataset.subrecipes) : null;
+
+      let matchesGusto = false;
+      let matchesStrumenti = false;
+
+      if (subrecipes) {
+        // Collection: show if ANY sub-recipe matches
+        const match = subrecipes.some(sr => {
+          const srTags = sr.tags || [];
+          const g = !activeGusto || srTags.includes(activeGusto);
+          let s;
+          if (tutteActive) {
+            s = true;
+          } else if (nessunoActive) {
+            s = strumentoTags.every(t => !srTags.includes(t));
+          } else if (activeStrumenti.length > 0) {
+            s = activeStrumenti.every(t => srTags.includes(t));
+          } else {
+            s = true;
+          }
+          return g && s;
+        });
+        matchesGusto = match;
+        matchesStrumenti = match;
+      } else {
+        // Single recipe
+        const tags = (card.dataset.tags || '').split(',');
+        matchesGusto = !activeGusto || tags.includes(activeGusto);
+
+        if (tutteActive) {
+          matchesStrumenti = true;
+        } else if (nessunoActive) {
+          matchesStrumenti = strumentoTags.every(s => !tags.includes(s));
+        } else if (activeStrumenti.length > 0) {
+          matchesStrumenti = activeStrumenti.every(s => tags.includes(s));
+        } else {
+          matchesStrumenti = true;
+        }
+      }
 
       card.style.display = matchesGusto && matchesStrumenti && matchesSearch ? '' : 'none';
     });
@@ -199,6 +246,9 @@ const recipes = (await getCollection('recipes'))
   .filter-btn[data-strumento="mixer"] { border-color: var(--tag-mixer); color: var(--tag-mixer); }
   .filter-btn[data-strumento="mixer"]:hover { background: #eaf4fb; border-color: var(--tag-mixer); color: var(--tag-mixer); }
   .filter-btn[data-strumento="mixer"].active { background: var(--tag-mixer); color: white; border-color: var(--tag-mixer); }
+  .filter-btn[data-strumento="nessuno"] { border-color: var(--text-light); color: var(--text-light); }
+  .filter-btn[data-strumento="nessuno"]:hover { background: #f0f0f0; border-color: var(--text-light); color: var(--text-light); }
+  .filter-btn[data-strumento="nessuno"].active { background: var(--text-light); color: white; border-color: var(--text-light); }
 
   code {
     background: #eee;

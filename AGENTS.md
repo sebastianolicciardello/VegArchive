@@ -11,7 +11,7 @@ Regole:
 - Elimina ripetizioni, saluti, sponsor e parti non rilevanti.
 - Mantieni il significato originale della ricetta.
 - Se il video contiene suggerimenti utili, inseriscili nella sezione "Note".
-- Se il video contiene più ricette, crea sezioni separate all'interno dello stesso file (`---` come separatore), ciascuna con ingredienti, procedimento, note, tempi e porzioni propri.
+- Se il video contiene più ricette, crea un unico file con `---` come separatore e usa il campo `subrecipes` nel frontmatter (vedi sezione Raccolte).
 - Genera il file in `src/content/recipes/` seguendo il formato delle ricette esistenti.
 
 ## Tag ammessi
@@ -33,11 +33,34 @@ Le ricette senza forno (padella, cottura Piano cottura, ecc.) non hanno tag di c
 È possibile avere più tag strumento insieme (es. `forno` + `mixer`).
 Niente `vegetale`, `vegan` e `senza forno`.
 
+**Nelle raccolte con `subrecipes`** il campo `tags` non va usato: i tag vanno sulle singole sotto-ricette.
+
 ## Struttura file
 
 I file ricetta vanno in `src/content/recipes/` come `.md` con frontmatter YAML.
 Il campo `transcript` nel frontmatter contiene la trascrizione pulita (non visibile in pagina).
 I campi `prepTime`, `cookTime`, `totalTime`, `servings` vanno sempre compilati se possibile.
+
+### Raccolte (più video nello stesso video)
+
+Per video che contengono più ricette, il frontmatter usa il campo `subrecipes` invece di `tags`:
+
+```yaml
+subrecipes:
+  - title: "Ricetta 1: Nome Primo Piatto"
+    tags: [salato, forno]
+  - title: "Ricetta 2: Nome Secondo Piatto"
+    tags: [salato]
+  - title: "Ricetta 3: Nome Terzo Piatto"
+    tags: [salato, mixer]
+```
+
+Regole per `subrecipes`:
+- Ogni sotto-ricetta ha `title` (stringa) e `tags` (array di stringhe, stessi tag ammessi).
+- Se una sotto-ricetta non usa strumenti, ha solo il tag gusto (es. `[salato]`).
+- Il body del file contiene le sezioni separate da `---`, ciascuna con ingredienti, procedimento, note, tempi e porzioni propri.
+- Ogni sezione nel body inizia con `## Ricetta N: Titolo` (l'ancora HTML viene generata automaticamente da questo titolo).
+- Il video YouTube linka un unico video; le sotto-ricette sono tutte sullo stesso URL.
 
 ## Strumenti
 

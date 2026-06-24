@@ -3,10 +3,13 @@ title: "Secondi Vegan per Natale"
 author: "Cucina Botanica"
 youtube: "https://www.youtube.com/watch?v=isDtDI3k2GE"
 date: "2026-06-16"
-tags:
-  - salato
-  - forno
-  - mixer
+subrecipes:
+  - title: "Ricetta 1: Polpettone Vegano in Crosta"
+    tags: [salato, forno, mixer]
+  - title: "Ricetta 2: Polpette di Soia al Sugo"
+    tags: [salato, forno]
+  - title: "Ricetta 3: Cavolfiore Panato al Forno con Hummus"
+    tags: [salato, forno, mixer]
 transcript: >
   i secondi piatti vegetali sono spesso una sfida perché come secondi tante
   persone si immaginano piatti a base di carne o di pesce e per natale è
