@@ -72,3 +72,11 @@ Per le raccolte di più ricette (`---`), aggiungi `### Strumenti` sotto ogni sot
 
 La trascrizione va recuperata dal link YouTube usando `https://youtube-transcript.ai/transcript/{VIDEO_ID}.txt`.
 Va ripulita (no triple ripetizioni, no `[Musica]`, no saluti, no sponsor) e salvata nel campo `transcript` del frontmatter.
+
+### Fallback: sito Cucina Botanica
+
+Se la trascrizione non è disponibile o è illeggibile (es. sottotitoli automatici in giapponese),
+recupera ingredienti e procedimento dal sito ufficiale:
+`https://www.cucinabotanica.com/ricette/{NOME-RICETTA}/`
+Inserisci nel campo `transcript` la descrizione e i passaggi dal sito, rielaborati in forma di
+trascrizione continua (senza interruzioni visibili).
